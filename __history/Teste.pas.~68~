@@ -1,0 +1,145 @@
+unit Teste;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, ComObj, Vcl.StdCtrls;
+
+type
+  TForm1 = class(TForm)
+    btn1: TButton;
+    btn2: TButton;
+    procedure btn1Click(Sender: TObject);
+    procedure btn2Click(Sender: TObject);
+  private
+    procedure CriarTabelaNoWord;
+    procedure ConverterWordParaPDF;
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.dfm}
+
+{ TForm1 }
+
+procedure TForm1.btn1Click(Sender: TObject);
+begin
+  CriarTabelaNoWord;
+end;
+
+procedure TForm1.CriarTabelaNoWord;
+var
+  WordApp, Doc, Table, Range, CellRange: OleVariant;
+  i: Integer;
+  Itens: array of array of string;
+  cOBS: String;
+begin
+  try
+    // Criar uma instância do Word
+    WordApp := CreateOleObject('Word.Application');
+    WordApp.Visible := True; // Torna o Word visível (opcional)
+
+    // Abrir o documento modelo
+    Doc := WordApp.Documents.Open('C:\Users\devmv\Desktop\MODELO.docx');
+
+    // Criar uma tabela na posição desejada
+    Range := Doc.Bookmarks.Item('TabelaAqui').Range; // Nome de um marcador no Word
+    Table := Doc.Tables.Add(Range, 4, 4); // Criar tabela com cabeçalhos
+
+    // Preencher cabeçalhos
+    Table.Cell(1, 1).Range.Text := 'ITEM E DESCRIÇÃO';
+    Table.Cell(1, 1).Range.Font.Bold := True;
+    Table.Cell(1, 1).Range.Font.Size := 12;
+    Table.Cell(1, 1).Range.ParagraphFormat.Alignment := 1;
+    Table.Cell(1, 1).Range.Font.Color := 255;
+
+    Table.Cell(1, 2).Range.Text := 'QUANTIDADE';
+    Table.Cell(1, 2).Range.Font.Bold := True;
+    Table.Cell(1, 2).Range.Font.Size := 12;
+    Table.Cell(1, 2).Range.ParagraphFormat.Alignment := 1;
+
+    Table.Cell(1, 3).Range.Text := 'PREÇO UNIT';
+    Table.Cell(1, 3).Range.Font.Bold := True;
+    Table.Cell(1, 3).Range.Font.Size := 12;
+    Table.Cell(1, 3).Range.ParagraphFormat.Alignment := 1;
+
+    Table.Cell(1, 4).Range.Text := 'TOTAL';
+    Table.Cell(1, 4).Range.Font.Bold := True;
+    Table.Cell(1, 4).Range.Font.Size := 12;
+    Table.Cell(1, 4).Range.ParagraphFormat.Alignment := 1;
+
+    for i := 2 to 4 do
+    begin
+      cOBS := 'observação ' + i.ToString;
+      CellRange := Table.Cell(i, 1).Range;
+      CellRange.Text := 'PRODUTO ' + I.ToString + #13#10 + cOBS;
+      if(CellRange.Find.Execute(cOBS))then
+      begin
+        CellRange.Font.Italic := True;
+        CellRange.Font.Size := 8;
+      end;
+
+      CellRange := Table.Cell(i, 2).Range;
+      CellRange.Text := i.ToString;
+      CellRange.ParagraphFormat.Alignment := 1;       {center}
+
+      CellRange := Table.Cell(i, 3).Range;
+      CellRange.Text := FormatFloat('R$ #,##0.00', 5000);
+      CellRange.ParagraphFormat.Alignment := 2;       {right}
+
+      CellRange := Table.Cell(i, 4).Range;
+      CellRange.Text := FormatFloat('R$ #,##0.00', (i * 5000));
+      CellRange.ParagraphFormat.Alignment := 2;
+    end;
+
+    // Salvar e fechar
+    Doc.SaveAs('C:\Users\devmv\Desktop\Documento_Preenchido.docx');
+//    WordApp.Quit;
+  except
+    on E: Exception do
+      ShowMessage('Erro: ' + E.Message);
+  end;
+end;
+
+procedure TForm1.btn2Click(Sender: TObject);
+begin
+  ConverterWordParaPDF;
+end;
+
+procedure TForm1.ConverterWordParaPDF;
+var
+  WordApp, Doc: OleVariant;
+  CaminhoDoc, CaminhoPDF: string;
+begin
+  try
+    // Definir caminhos
+    CaminhoDoc := 'C:\Users\devmv\Desktop\Documento_Preenchido.docx';
+    CaminhoPDF := 'C:\Users\devmv\Desktop\Documento_Preenchido.pdf';
+
+    // Criar instância do Word
+    WordApp := CreateOleObject('Word.Application');
+
+    // Abrir documento
+    Doc := WordApp.Documents.Open(CaminhoDoc);
+
+    // Exportar para PDF
+    Doc.ExportAsFixedFormat(CaminhoPDF, 17); // 17 = wdExportFormatPDF
+
+    // Fechar documento sem salvar alterações
+    Doc.Close(False);
+    WordApp.Quit;
+
+    ShowMessage('Conversão concluída! O PDF está em: ' + CaminhoPDF);
+  except
+    on E: Exception do
+      ShowMessage('Erro ao converter para PDF: ' + E.Message);
+  end;
+end;
+
+end.

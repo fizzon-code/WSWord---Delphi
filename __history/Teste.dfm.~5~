@@ -1,0 +1,64 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 201
+  ClientWidth = 447
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object lbl1: TLabel
+    Left = 32
+    Top = 21
+    Width = 36
+    Height = 13
+    Caption = 'colunas'
+  end
+  object lbl2: TLabel
+    Left = 103
+    Top = 21
+    Width = 27
+    Height = 13
+    Caption = 'linhas'
+  end
+  object edtcol: TEdit
+    Left = 32
+    Top = 40
+    Width = 65
+    Height = 21
+    TabOrder = 0
+    Text = '1'
+  end
+  object edtrow: TEdit
+    Left = 103
+    Top = 40
+    Width = 65
+    Height = 21
+    TabOrder = 1
+    Text = '3'
+  end
+  object btn1: TButton
+    Left = 32
+    Top = 67
+    Width = 89
+    Height = 25
+    Caption = 'gerar arquivo'
+    TabOrder = 2
+    OnClick = btn1Click
+  end
+  object btn2: TButton
+    Left = 32
+    Top = 98
+    Width = 113
+    Height = 25
+    Caption = 'salvar como pdf'
+    TabOrder = 3
+    OnClick = btn2Click
+  end
+end
