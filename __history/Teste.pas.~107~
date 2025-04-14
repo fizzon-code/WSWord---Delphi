@@ -91,9 +91,8 @@ begin
         CellRange.Text := 'observação ' + i.ToString;
       end;
 
-      CellRange := Table.Cell(i, 1).Range;
-      if(CellRange.Find.Execute('TESTE 123'))then
-        CellRange.Font.Size := '14';
+      if(Table.Cell(i, 1).Range.Find.Execute('TESTE 123'))then
+        Table.Cell(i, 1).Range.Font.Size := '14';
 
       CellRange := Table.Cell(i, 2).Range;
       CellRange.Text := i.ToString;

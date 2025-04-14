@@ -83,17 +83,13 @@ begin
     begin
       cOBS := '[FIELD 2]';// 'observação ' + i.ToString;
       CellRange := Table.Cell(i, 1).Range;
-      CellRange.Text := 'PRODUTO ' + I.ToString + #13#10 + cOBS + #13#10 + 'TESTE 123';
+      CellRange.Text := 'PRODUTO ' + I.ToString + #13#10 + cOBS;
       if(CellRange.Find.Execute(cOBS))then
       begin
         CellRange.Font.Italic := '1';
         CellRange.Font.Size := '8';
         CellRange.Text := 'observação ' + i.ToString;
       end;
-
-      CellRange := Table.Cell(i, 1).Range;
-      if(CellRange.Find.Execute('TESTE 123'))then
-        CellRange.Font.Size := '14';
 
       CellRange := Table.Cell(i, 2).Range;
       CellRange.Text := i.ToString;
@@ -110,6 +106,7 @@ begin
 
     TextRange := Doc.Bookmarks.Item('Teste').Range;
     TextRange.Text := '123456789 Luis';
+    TextRange.Font.Bold := '1';
     TextRange.Font.Bold := '1';
     TextRange.Font.Underline := '1';
     TextRange.Font.Italic := '0';
